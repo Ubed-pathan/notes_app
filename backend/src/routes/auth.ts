@@ -2,7 +2,6 @@ import { Router } from 'express';
 import { z } from 'zod';
 import User from '../models/User';
 import Otp from '../models/Otp';
-import { v4 as uuidv4 } from 'uuid';
 import { sendOtpEmail } from '../utils/email';
 import { signJwt } from '../utils/jwt';
 import { OAuth2Client } from 'google-auth-library';

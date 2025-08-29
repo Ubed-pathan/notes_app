@@ -16,3 +16,5 @@ Copy `.env.example` to `.env` and fill values.
 - `DELETE /api/notes/:id` – delete note (auth)
 
 Authorization: `Authorization: Bearer <token>`
+
+Dev note: When SMTP is not configured, OTP emails are sent via Ethereal and a preview URL is logged in the server console.

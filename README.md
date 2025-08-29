@@ -18,9 +18,20 @@ A full-stack note-taking application with OTP and Google authentication. Built w
 ## Setup
 See `frontend/README.md` and `backend/README.md` for app-specific steps.
 
-### Quick start (Docker)
-1. Copy `.env.example` to `.env` files in frontend and backend as instructed.
-2. Run Docker Compose at repo root to start MongoDB and backend.
+### Quick start (local)
+- Prereqs: Node 18+, MongoDB running locally (or Docker), Google OAuth Client ID (optional).
+- Backend:
+	- Copy `backend/.env.example` to `backend/.env` and set values.
+	- In one terminal: `cd backend && npm i && npm run dev`.
+- Frontend:
+	- Copy `frontend/.env.example` to `frontend/.env` and set `VITE_API_URL` and optionally `VITE_GOOGLE_CLIENT_ID`.
+	- In another terminal: `cd frontend && npm i && npm run dev`.
+	- Open http://localhost:5173
+
+### Quick start (Docker for Mongo only)
+If you have Docker, start MongoDB:
+- `docker compose up -d mongo`
+Then run backend and frontend as above.
 
 ## Monorepo Structure
 - `frontend/` – React app
@@ -30,6 +41,6 @@ See `frontend/README.md` and `backend/README.md` for app-specific steps.
 - See each package `package.json`.
 
 ## Deployment
-- Deploy backend to any Node host (Render, Railway, Azure, etc.).
-- Deploy frontend to Vercel/Netlify.
+- Backend: build and deploy Docker image or run `npm run build` and host `dist` on Node 18+.
+- Frontend: deploy `frontend/dist` to Vercel/Netlify/Static hosting.
 
