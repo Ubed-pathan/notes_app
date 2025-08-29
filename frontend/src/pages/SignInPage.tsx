@@ -38,7 +38,7 @@ export default function SignInPage() {
   const RightPanel = () => (
     <div className="hidden lg:block lg:w-1/2 p-6">
       <div className="w-full h-full rounded-3xl overflow-hidden">
-        <img src="https://images.unsplash.com/photo-1517694712202-14dd9538aa97?q=80&w=1600&auto=format&fit=crop" alt="bg" className="w-full h-full object-cover"/>
+        <img src="/images/auth-hero.png" alt="Auth Hero" className="w-full h-full object-cover"/>
       </div>
     </div>
   );
