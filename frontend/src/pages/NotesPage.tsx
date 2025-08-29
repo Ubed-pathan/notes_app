@@ -19,7 +19,14 @@ export default function NotesPage() {
     }
   };
 
-  useEffect(() => { load(); }, []);
+  useEffect(() => {
+    const token = localStorage.getItem('token');
+    if (!token) {
+      window.location.href = '/';
+      return;
+    }
+    load();
+  }, []);
 
   const createNote = async () => {
     setError(null);
@@ -37,7 +44,7 @@ export default function NotesPage() {
     setError(null);
     try {
       await api.delete(`/notes/${id}`);
-      setNotes(notes.filter((n) => n._id !== id));
+  setNotes(notes.filter((n: Note) => n._id !== id));
     } catch (e: any) {
       setError(e.response?.data?.error || 'Failed to delete');
     }
