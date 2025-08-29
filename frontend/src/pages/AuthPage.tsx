@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import api from '../lib/api';
 import { z } from 'zod';
+import Logo from '../components/Logo';
 
 const emailSchema = z.string().email();
 
@@ -12,6 +13,7 @@ export default function AuthPage() {
   const [phase, setPhase] = useState<'request' | 'verify'>('request');
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
+  const [showOtp, setShowOtp] = useState(false);
 
   const requestOtp = async () => {
     setError(null);
@@ -55,10 +57,7 @@ export default function AuthPage() {
     <div className="min-h-screen flex items-center justify-center p-4">
       <div className="w-full max-w-6xl bg-white rounded-3xl shadow-sm flex flex-col lg:flex-row overflow-hidden">
         <div className="w-full lg:w-1/2 p-6 sm:p-10">
-          <div className="flex items-center gap-2 mb-6">
-            <div className="w-5 h-5 rounded-full border-4 border-blue-500 border-t-transparent animate-spin"/>
-            <div className="font-medium">HD</div>
-          </div>
+          <div className="mb-6"><Logo /></div>
           <h1 className="text-4xl sm:text-5xl font-semibold">Sign up</h1>
           <p className="text-gray-400 mt-2">Sign up to enjoy the feature of HD</p>
 
@@ -86,8 +85,11 @@ export default function AuthPage() {
 
             {phase === 'verify' && (
               <>
-                <div>
-                  <input type="password" value={otp} onChange={(e) => setOtp(e.target.value)} placeholder="OTP" className="w-full border rounded-xl px-3 py-3 tracking-widest focus:outline-none focus:ring-2 focus:ring-blue-500" />
+                <div className="flex items-center rounded-xl border focus-within:ring-2 focus-within:ring-blue-500">
+                  <input type={showOtp ? 'text' : 'password'} value={otp} onChange={(e) => setOtp(e.target.value)} placeholder="OTP" className="w-full rounded-xl px-3 py-3 tracking-widest focus:outline-none" />
+                  <button className="px-3 text-gray-400" title="toggle" onClick={() => setShowOtp(!showOtp)}>
+                    {showOtp ? '👁️' : '🙈'}
+                  </button>
                 </div>
                 <button onClick={verifyOtp} disabled={loading} className="w-full bg-blue-600 text-white py-3 rounded-xl text-lg">
                   {loading ? 'Verifying…' : 'Sign up'}

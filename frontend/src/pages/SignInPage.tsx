@@ -1,11 +1,13 @@
 import { useState } from 'react';
 import api from '../lib/api';
+import Logo from '../components/Logo';
 
 export default function SignInPage() {
   const [email, setEmail] = useState('');
   const [otp, setOtp] = useState('');
   const [phase, setPhase] = useState<'request' | 'verify'>('request');
   const [error, setError] = useState<string | null>(null);
+  const [showOtp, setShowOtp] = useState(false);
   const [loading, setLoading] = useState(false);
 
   const requestOtp = async () => {
@@ -43,12 +45,9 @@ export default function SignInPage() {
 
   return (
     <div className="min-h-screen flex items-center justify-center p-4 bg-black lg:bg-white">
-      <div className="w-full max-w-6xl bg-white rounded-3xl shadow-sm flex flex-col lg:flex-row overflow-hidden">
+    <div className="w-full max-w-6xl bg-white rounded-3xl shadow-sm flex flex-col lg:flex-row overflow-hidden">
         <div className="w-full lg:w-1/2 p-6 sm:p-10">
-          <div className="flex items-center gap-2 mb-6">
-            <div className="w-5 h-5 rounded-full border-4 border-blue-500 border-t-transparent animate-spin"/>
-            <div className="font-medium">HD</div>
-          </div>
+      <div className="mb-6"><Logo /></div>
           <h1 className="text-4xl sm:text-5xl font-semibold">Sign in</h1>
           <p className="text-gray-400 mt-2">Please login to continue to your account.</p>
 
@@ -69,13 +68,13 @@ export default function SignInPage() {
             {phase === 'verify' && (
               <>
                 <div className="flex items-center rounded-xl border focus-within:ring-2 focus-within:ring-blue-500">
-                  <input type="password" value={otp} onChange={(e) => setOtp(e.target.value)} placeholder="OTP" className="w-full rounded-xl px-3 py-3 tracking-widest focus:outline-none" />
-                  <button className="px-3 text-gray-400" title="toggle">
-                    <span className="material-icons">visibility_off</span>
+                  <input type={showOtp ? 'text' : 'password'} value={otp} onChange={(e) => setOtp(e.target.value)} placeholder="OTP" className="w-full rounded-xl px-3 py-3 tracking-widest focus:outline-none" />
+                  <button className="px-3 text-gray-400" title="toggle" onClick={() => setShowOtp(!showOtp)}>
+                    {showOtp ? '👁️' : '🙈'}
                   </button>
                 </div>
                 <div>
-                  <a className="text-blue-600 underline text-sm" onClick={requestOtp}>Resend OTP</a>
+                  <button type="button" className="text-blue-600 underline text-sm" onClick={requestOtp}>Resend OTP</button>
                 </div>
                 <div className="flex items-center gap-2 text-sm text-gray-600">
                   <input type="checkbox" id="keep" className="h-4 w-4"/>
