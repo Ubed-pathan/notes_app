@@ -1,4 +1,4 @@
-import jwt from 'jsonwebtoken';
+import jwt, { Secret, SignOptions } from 'jsonwebtoken';
 
 export interface JwtUser {
   id: string;
@@ -6,10 +6,11 @@ export interface JwtUser {
   name?: string;
 }
 
-const JWT_SECRET = process.env.JWT_SECRET || 'dev_secret';
+const JWT_SECRET: Secret = (process.env.JWT_SECRET || 'dev_secret') as Secret;
 
 export function signJwt(payload: JwtUser, expiresIn: string | number = '7d') {
-  return jwt.sign(payload, JWT_SECRET, { expiresIn });
+  const options: SignOptions = { expiresIn } as SignOptions;
+  return jwt.sign(payload, JWT_SECRET, options);
 }
 
 export function verifyJwt<T = JwtUser>(token: string): T | null {
