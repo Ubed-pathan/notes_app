@@ -51,16 +51,23 @@ export default function NotesPage() {
   };
 
   const user = localStorage.getItem('user');
-  const name = user ? JSON.parse(user).name || JSON.parse(user).email : '';
+  const parsed = user ? JSON.parse(user) : null;
+  const name = parsed?.name || parsed?.email || '';
+  const emailMasked = parsed?.email ? parsed.email.replace(/(.{2}).+(@.+)/, '$1xxxxxx$2') : '';
 
   return (
-    <div className="min-h-screen p-4 max-w-3xl mx-auto space-y-4">
+    <div className="min-h-screen p-4 max-w-3xl mx-auto space-y-6">
       <div className="flex items-center justify-between">
-        <div>
-          <div className="text-xl font-semibold">Welcome{ name ? `, ${name}` : ''}</div>
-          <div className="text-sm text-gray-500">Create and manage your notes</div>
+        <div className="flex items-center gap-2">
+          <div className="w-5 h-5 rounded-full border-4 border-blue-500 border-t-transparent animate-spin"/>
+          <div className="text-2xl font-semibold">Dashboard</div>
         </div>
-        <button onClick={() => { localStorage.clear(); window.location.href = '/'; }} className="text-sm text-gray-600">Logout</button>
+        <button onClick={() => { localStorage.clear(); window.location.href = '/signin'; }} className="text-blue-600 underline">Sign Out</button>
+      </div>
+
+      <div className="rounded-2xl border p-4 shadow-sm">
+        <div className="text-xl font-semibold">Welcome{ name ? `, ${name} !` : '!'}</div>
+        {parsed?.email && <div className="text-sm text-gray-600 mt-1">Email: {emailMasked}</div>}
       </div>
 
       {error && <div className="text-red-600 text-sm">{error}</div>}
@@ -68,15 +75,15 @@ export default function NotesPage() {
       <div className="space-y-2">
         <input className="w-full border rounded px-3 py-2" placeholder="Title" value={title} onChange={(e) => setTitle(e.target.value)} />
         <textarea className="w-full border rounded px-3 py-2" placeholder="Content" value={content} onChange={(e) => setContent(e.target.value)} />
-        <button onClick={createNote} className="bg-black text-white px-4 py-2 rounded">Add Note</button>
+        <button onClick={createNote} className="bg-blue-600 text-white px-4 py-3 rounded-xl">Create Note</button>
       </div>
 
       <div className="grid gap-3 sm:grid-cols-2">
         {notes.map((n) => (
-          <div key={n._id} className="border rounded p-3">
+          <div key={n._id} className="border rounded-2xl p-3 flex items-start justify-between shadow-sm">
             <div className="font-medium">{n.title}</div>
-            <div className="text-sm text-gray-600 whitespace-pre-wrap">{n.content}</div>
-            <button onClick={() => deleteNote(n._id)} className="text-xs text-red-600 mt-2">Delete</button>
+            <div className="text-sm text-gray-600 whitespace-pre-wrap flex-1 ml-3">{n.content}</div>
+            <button onClick={() => deleteNote(n._id)} className="text-red-600" title="delete">🗑️</button>
           </div>
         ))}
       </div>

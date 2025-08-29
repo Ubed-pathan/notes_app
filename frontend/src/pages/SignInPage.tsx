@@ -1,13 +1,8 @@
 import { useState } from 'react';
 import api from '../lib/api';
-import { z } from 'zod';
 
-const emailSchema = z.string().email();
-
-export default function AuthPage() {
+export default function SignInPage() {
   const [email, setEmail] = useState('');
-  const [name, setName] = useState('');
-  const [dob, setDob] = useState(''); // yyyy-mm-dd
   const [otp, setOtp] = useState('');
   const [phase, setPhase] = useState<'request' | 'verify'>('request');
   const [error, setError] = useState<string | null>(null);
@@ -15,8 +10,6 @@ export default function AuthPage() {
 
   const requestOtp = async () => {
     setError(null);
-    const valid = emailSchema.safeParse(email);
-    if (!valid.success) return setError('Enter a valid email');
     setLoading(true);
     try {
       await api.post('/auth/request-otp', { email });
@@ -31,10 +24,7 @@ export default function AuthPage() {
     if (otp.length !== 6) return setError('Enter 6-digit OTP');
     setLoading(true);
     try {
-      const payload: any = { email, code: otp };
-      if (name) payload.name = name;
-      if (dob) payload.dateOfBirth = new Date(dob).toISOString();
-      const res = await api.post('/auth/verify-otp', payload);
+      const res = await api.post('/auth/verify-otp', { email, code: otp });
       localStorage.setItem('token', res.data.token);
       localStorage.setItem('user', JSON.stringify(res.data.user));
       window.location.href = '/notes';
@@ -52,27 +42,19 @@ export default function AuthPage() {
   );
 
   return (
-    <div className="min-h-screen flex items-center justify-center p-4">
+    <div className="min-h-screen flex items-center justify-center p-4 bg-black lg:bg-white">
       <div className="w-full max-w-6xl bg-white rounded-3xl shadow-sm flex flex-col lg:flex-row overflow-hidden">
         <div className="w-full lg:w-1/2 p-6 sm:p-10">
           <div className="flex items-center gap-2 mb-6">
             <div className="w-5 h-5 rounded-full border-4 border-blue-500 border-t-transparent animate-spin"/>
             <div className="font-medium">HD</div>
           </div>
-          <h1 className="text-4xl sm:text-5xl font-semibold">Sign up</h1>
-          <p className="text-gray-400 mt-2">Sign up to enjoy the feature of HD</p>
+          <h1 className="text-4xl sm:text-5xl font-semibold">Sign in</h1>
+          <p className="text-gray-400 mt-2">Please login to continue to your account.</p>
 
           {error && <div className="text-red-600 text-sm mt-4">{error}</div>}
 
           <div className="mt-6 space-y-4">
-            <div>
-              <label className="block text-sm text-gray-500 mb-1">Your Name</label>
-              <input type="text" value={name} onChange={(e) => setName(e.target.value)} placeholder="Jonas Khanwald" className="w-full border rounded-xl px-3 py-3" />
-            </div>
-            <div>
-              <label className="block text-sm text-gray-500 mb-1">Date of Birth</label>
-              <input type="date" value={dob} onChange={(e) => setDob(e.target.value)} className="w-full border rounded-xl px-3 py-3" />
-            </div>
             <div>
               <label className="block text-sm text-gray-500 mb-1">Email</label>
               <input type="email" value={email} onChange={(e) => setEmail(e.target.value)} placeholder="jonas_kahnwald@gmail.com" className="w-full border rounded-xl px-3 py-3 focus:outline-none focus:ring-2 focus:ring-blue-500" />
@@ -86,17 +68,27 @@ export default function AuthPage() {
 
             {phase === 'verify' && (
               <>
+                <div className="flex items-center rounded-xl border focus-within:ring-2 focus-within:ring-blue-500">
+                  <input type="password" value={otp} onChange={(e) => setOtp(e.target.value)} placeholder="OTP" className="w-full rounded-xl px-3 py-3 tracking-widest focus:outline-none" />
+                  <button className="px-3 text-gray-400" title="toggle">
+                    <span className="material-icons">visibility_off</span>
+                  </button>
+                </div>
                 <div>
-                  <input type="password" value={otp} onChange={(e) => setOtp(e.target.value)} placeholder="OTP" className="w-full border rounded-xl px-3 py-3 tracking-widest focus:outline-none focus:ring-2 focus:ring-blue-500" />
+                  <a className="text-blue-600 underline text-sm" onClick={requestOtp}>Resend OTP</a>
+                </div>
+                <div className="flex items-center gap-2 text-sm text-gray-600">
+                  <input type="checkbox" id="keep" className="h-4 w-4"/>
+                  <label htmlFor="keep">Keep me logged in</label>
                 </div>
                 <button onClick={verifyOtp} disabled={loading} className="w-full bg-blue-600 text-white py-3 rounded-xl text-lg">
-                  {loading ? 'Verifying…' : 'Sign up'}
+                  {loading ? 'Signing in…' : 'Sign in'}
                 </button>
               </>
             )}
 
             <div className="text-gray-500">
-              Already have an account?? <a className="text-blue-600 underline" href="#">Sign in</a>
+              Need an account?? <a className="text-blue-600 underline" href="/">Create one</a>
             </div>
           </div>
         </div>
