@@ -8,8 +8,17 @@ import notesRouter from './routes/notes.js';
 
 const app = express();
 
+const allowedOrigins = (process.env.CLIENT_ORIGIN || 'http://localhost:5173')
+  .split(',')
+  .map((o) => o.trim().replace(/\/$/, '')); // strip trailing slash
+
 app.use(cors({
-  origin: process.env.CLIENT_ORIGIN || 'http://localhost:5173',
+  origin(origin, callback) {
+    if (!origin) return callback(null, true);
+    const normalized = origin.replace(/\/$/, '');
+    const ok = allowedOrigins.includes(normalized);
+    callback(ok ? null : new Error('Not allowed by CORS'), ok);
+  },
   credentials: true,
 }));
 app.use(express.json());
