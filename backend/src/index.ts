@@ -3,8 +3,8 @@ import express from 'express';
 import cors from 'cors';
 import cookieParser from 'cookie-parser';
 import mongoose from 'mongoose';
-import authRouter from './routes/auth';
-import notesRouter from './routes/notes';
+import authRouter from './routes/auth.js';
+import notesRouter from './routes/notes.js';
 
 const app = express();
 

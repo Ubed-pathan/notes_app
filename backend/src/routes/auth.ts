@@ -1,9 +1,9 @@
 import { Router } from 'express';
 import { z } from 'zod';
-import User from '../models/User';
-import Otp from '../models/Otp';
-import { sendOtpEmail } from '../utils/email';
-import { signJwt } from '../utils/jwt';
+import User from '../models/User.js';
+import Otp from '../models/Otp.js';
+import { sendOtpEmail } from '../utils/email.js';
+import { signJwt } from '../utils/jwt.js';
 import { OAuth2Client } from 'google-auth-library';
 
 const router = Router();
