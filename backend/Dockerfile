@@ -5,7 +5,7 @@ COPY package*.json ./
 RUN npm ci --omit=dev
 COPY tsconfig.json ./
 COPY src ./src
-RUN npm i -D typescript && npx tsc -p tsconfig.json
+RUN npm i -D typescript@latest && npx tsc -p tsconfig.json
 
 # Runtime stage
 FROM node:20-alpine
