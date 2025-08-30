@@ -2,6 +2,7 @@ import { useState } from 'react';
 import api from '../lib/api';
 import { z } from 'zod';
 import Logo from '../components/Logo';
+import { LabeledInput, DateField } from '../components/Field';
 
 const emailSchema = z.string().email();
 
@@ -13,7 +14,6 @@ export default function AuthPage() {
   const [phase, setPhase] = useState<'request' | 'verify'>('request');
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
-  const [showOtp, setShowOtp] = useState(false);
 
   const requestOtp = async () => {
     setError(null);
@@ -47,8 +47,8 @@ export default function AuthPage() {
 
   const RightPanel = () => (
     <div className="hidden lg:block lg:w-1/2 p-6">
-      <div className="w-full h-full rounded-3xl overflow-hidden">
-        <img src="/images/auth-hero.png" alt="Auth Hero" className="w-full h-full object-cover"/>
+      <div className="w-full rounded-3xl overflow-hidden" style={{ aspectRatio: '4 / 5' }}>
+        <img src="/image.png" alt="Auth Hero" className="w-full h-full object-cover"/>
       </div>
     </div>
   );
@@ -58,47 +58,35 @@ export default function AuthPage() {
       <div className="w-full max-w-6xl bg-white rounded-3xl shadow-sm flex flex-col lg:flex-row overflow-hidden">
         <div className="w-full lg:w-1/2 p-6 sm:p-10">
           <div className="mb-6"><Logo /></div>
-          <h1 className="text-4xl sm:text-5xl font-semibold">Sign up</h1>
+          <h1 className="text-[44px] leading-tight font-semibold">Sign up</h1>
           <p className="text-gray-400 mt-2">Sign up to enjoy the feature of HD</p>
 
           {error && <div className="text-red-600 text-sm mt-4">{error}</div>}
 
           <div className="mt-6 space-y-4">
-            <div>
-              <label className="block text-sm text-gray-500 mb-1">Your Name</label>
-              <input type="text" value={name} onChange={(e) => setName(e.target.value)} placeholder="Jonas Khanwald" className="w-full border rounded-xl px-3 py-3" />
-            </div>
-            <div>
-              <label className="block text-sm text-gray-500 mb-1">Date of Birth</label>
-              <input type="date" value={dob} onChange={(e) => setDob(e.target.value)} className="w-full border rounded-xl px-3 py-3" />
-            </div>
-            <div>
-              <label className="block text-sm text-gray-500 mb-1">Email</label>
-              <input type="email" value={email} onChange={(e) => setEmail(e.target.value)} placeholder="jonas_kahnwald@gmail.com" className="w-full border rounded-xl px-3 py-3 focus:outline-none focus:ring-2 focus:ring-blue-500" />
-            </div>
+            <LabeledInput label="Your Name" value={name} onChange={(e) => setName(e.target.value)} placeholder="Jonas Khanwald" />
+            <DateField label="Date of Birth" value={dob} onChange={setDob} />
+            <LabeledInput label="Email" type="email" autoComplete="email" value={email} onChange={(e) => setEmail(e.target.value)} placeholder="jonas_kahnwald@gmail.com" />
 
             {phase === 'request' && (
-              <button onClick={requestOtp} disabled={loading} className="w-full bg-blue-600 text-white py-3 rounded-xl text-lg">
+              <button onClick={requestOtp} disabled={loading} className="btn-primary">
                 {loading ? 'Sending…' : 'Get OTP'}
               </button>
             )}
 
             {phase === 'verify' && (
               <>
-                <div className="flex items-center rounded-xl border focus-within:ring-2 focus-within:ring-blue-500">
-                  <input type={showOtp ? 'text' : 'password'} value={otp} onChange={(e) => setOtp(e.target.value)} placeholder="OTP" className="w-full rounded-xl px-3 py-3 tracking-widest focus:outline-none" />
-                  <button className="px-3 text-gray-400" title="toggle" onClick={() => setShowOtp(!showOtp)}>
-                    {showOtp ? '👁️' : '🙈'}
-                  </button>
+                <div className="flex items-center rounded-2xl border focus-within:border-blue-500 bg-white">
+                  <input type="text" value={otp} onChange={(e) => setOtp(e.target.value)} placeholder="OTP" className="w-full rounded-2xl px-3 py-3 tracking-widest focus:outline-none bg-white text-gray-900" />
                 </div>
-                <button onClick={verifyOtp} disabled={loading} className="w-full bg-blue-600 text-white py-3 rounded-xl text-lg">
+                <button onClick={verifyOtp} disabled={loading} className="btn-primary">
                   {loading ? 'Verifying…' : 'Sign up'}
                 </button>
               </>
             )}
 
             <div className="text-gray-500">
-              Already have an account?? <a className="text-blue-600 underline" href="#">Sign in</a>
+              Already have an account?? <a className="text-blue-600 underline" href="/signin">Sign in</a>
             </div>
           </div>
         </div>

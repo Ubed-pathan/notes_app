@@ -3,9 +3,42 @@
 @tailwind utilities;
 
 :root {
-  color-scheme: light dark;
+  color-scheme: light;
 }
 
 body {
-  @apply bg-white text-gray-900;
+  @apply bg-white text-gray-900 font-sans;
+  margin: 0;
 }
+
+/* Form controls */
+.input {
+  @apply w-full border border-gray-300 rounded-2xl px-3 py-3 outline-none transition-shadow focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-white placeholder:text-gray-400;
+}
+
+.btn-primary {
+  @apply w-full bg-blue-600 hover:bg-blue-600/90 text-white py-3 rounded-2xl text-lg disabled:opacity-60 disabled:cursor-not-allowed transition-colors;
+}
+
+/* Simple field styling helpers (avoid @apply with group) */
+.field { position: relative; display: flex; align-items: center; gap: 0.5rem; padding: 0.75rem; border: 1px solid rgb(209 213 219); border-radius: 1rem; background: #fff; }
+.field:focus-within { border-color: rgb(59 130 246); }
+.field-label { position: absolute; top: -0.5rem; left: 0.75rem; background: #fff; padding: 0 0.25rem; font-size: 11px; color: rgb(156 163 175); }
+
+/* Normalize browser autofill (Chrome/Edge/Safari) to remove gray/yellow styling */
+input:-webkit-autofill,
+input:-webkit-autofill:hover,
+input:-webkit-autofill:focus,
+input:-webkit-autofill:active {
+  -webkit-text-fill-color: #111 !important;
+  caret-color: #111 !important;
+  -webkit-box-shadow: 0 0 0px 1000px #ffffff inset !important;
+  box-shadow: 0 0 0px 1000px #ffffff inset !important;
+  transition: background-color 9999s ease-in-out 0s;
+}
+
+/* Subtle modal animations */
+@keyframes fadeIn { from { opacity: 0 } to { opacity: 1 } }
+@keyframes popIn { from { opacity: 0; transform: translateY(8px) scale(0.98) } to { opacity: 1; transform: translateY(0) scale(1) } }
+.animate-fadeIn { animation: fadeIn 200ms ease-out both; }
+.animate-popIn { animation: popIn 200ms ease-out both; }
